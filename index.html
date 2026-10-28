@@ -829,7 +829,6 @@ for (const el of [segG, segS]) {
     if (t.length === 7) { e.preventDefault(); setCode(t); }
   });
 }
-$('btnClear').onclick = () => { setCode('', false); segT.focus(); };
 
 function analyse() {
   const t = segT.value, g = segG.value, s = segS.value;
@@ -981,7 +980,6 @@ matInputs.forEach((el, i) => {
     if (t.length >= 8) { e.preventDefault(); setMatCode(t); }
   });
 });
-$('matClear').onclick = () => { setMatCode('', false); matInputs[0].focus(); };
 const matCodeTyped = () => matInputs.map((el) => el.value).join('');
 
 // The longest prefix that can be read left to right: full segments plus the first partial one.
@@ -1142,7 +1140,15 @@ let qTimer;
 $('q').addEventListener('input', () => { clearTimeout(qTimer); qTimer = setTimeout(renderResults, 120); });
 $('rCostMore').onclick = () => { shown.cost += 30; renderResults(); };
 $('rMatMore').onclick = () => { shown.mat += 30; renderResults(); };
-$('qClear').onclick = () => { $('q').value = ''; renderResults(); $('q').focus(); };
+// Every "ล้าง" on this tab starts over: search box, cost code boxes and material code boxes.
+function clearLookup() {
+  $('q').value = '';
+  setCode('', false);
+  setMatCode('', false);
+  renderResults();
+  $('q').focus();
+}
+for (const id of ['qClear', 'btnClear', 'matClear']) $(id).onclick = clearLookup;
 
 // =====================================================================
 // ตรวจจากภาพเอกสาร
